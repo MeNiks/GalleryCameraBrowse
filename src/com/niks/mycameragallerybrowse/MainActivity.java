@@ -89,20 +89,20 @@ public class MainActivity extends Activity implements View.OnClickListener
 		Bitmap postImage =null;
 		if (requestCode == TAKE_CAMERA && resultCode == Activity.RESULT_OK)
 		{
-			String imagePath;
-			Uri selectedImageUri = data.getData();
-			if (selectedImageUri != null)
+			Bitmap photo=null;
+			 name = Build.MODEL;
+			if (!name.contains("Nexus"))
 			{
-				imagePath = getRealPathFromURI(selectedImageUri);
+				photo = (Bitmap) data.getExtras().get("data");
+			}
+			if(photo==null) {
+				Uri selectedImageUri = data.getData();
+				String imagePath = getRealPathFromURI(selectedImageUri);
 				BitmapFactory.Options options = new BitmapFactory.Options();
 				options.inSampleSize = 2;
-				options.inDither = false;
-				postImage = BitmapFactory.decodeFile(imagePath, options);
-				if (postImage == null)
-					postImage = (Bitmap) data.getExtras().get("data");
-			} else
-			{
-				postImage = (Bitmap) data.getExtras().get("data");
+				options.inDither = false; // Disable Dithering mode
+				options.inPurgeable = true;
+				photo = BitmapFactory.decodeFile(imagePath,options);
 			}
 			imageview.setImageBitmap(postImage);
 
